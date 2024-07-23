@@ -2,32 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.date-picker {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+  width: 100%;
+  position: relative;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.react-datepicker{
+  position: absolute;
+  right: 50px
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar-day {
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.calendar-day:hover {
+  background: #f0f0f0;
+}
+
+.calendar-day.selected {
+  background: #0070f3;
+  color: white;
+}
+
+.bg-blue-500 {
+  background-color: #3b82f6;
+}
+
+.bg-gray-200 {
+  background-color: #e5e7eb;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-red-500 {
+  color: #ef4444;
 }
