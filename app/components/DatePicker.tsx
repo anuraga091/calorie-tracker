@@ -28,10 +28,13 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({ initialView = 'date'}) =>
 
   const startDate = startOfWeek(selectedDateState);
 
-  const handleDateClick = (date: Date) => {
-    setSelectedDateState(date);
-    setCurrentMonth(new Date(date.getFullYear(), date.getMonth()));
-    setSelectedDate(date.toISOString().split('T')[0]);
+  const handleDateClick = (date: Date | null) => {
+    if (date){
+        setSelectedDateState(date);
+        setCurrentMonth(new Date(date.getFullYear(), date.getMonth()));
+        setSelectedDate(date.toISOString().split('T')[0]);
+    }
+    
   };
 
   const toggleView = () => {
@@ -52,7 +55,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({ initialView = 'date'}) =>
         <div className='react-datepicker'>
           <DatePicker
             selected={selectedDateState}
-            onChange={(date: Date) => handleDateClick(date)}
+            onChange={(date: Date | null) => handleDateClick(date)}
             customInput={
               <button>
                 <Image src="/calender.png" alt="calender" width={24} height={24}/>

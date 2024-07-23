@@ -19,8 +19,12 @@ const Home: React.FC = () => {
   const { foodLogs } = useFoodStore();
   const { breakfast = [], lunch = [], dinner = [] } = foodLogs[selectedDate] || {};
 
-  const parseNutrientValue = (value: string) => parseFloat(value.replace('g', ''));
-
+  const parseNutrientValue = (value: string | number) => {
+    if (typeof value === 'string') {
+      return parseFloat(value.replace('g', ''));
+    }
+    return value;
+  };
 
   // Calculate total calories and nutrients for the day
   const totalCalories = [...breakfast, ...lunch, ...dinner].reduce(
@@ -39,13 +43,15 @@ const Home: React.FC = () => {
   );
 
   const totalFat = [...breakfast, ...lunch, ...dinner].reduce(
-    (sum, food) => sum + parseNutrientValue(food.nutrients.fat),
-    0
-  );
+    (sum, food) => {
+      return sum + parseNutrientValue(food.nutrients.fat)
+    },0);
 
   // Calculate the percentage of the daily target achieved
-  const percentageAchieved = Math.min((totalCalories / DAILY_TARGET) * 100, 100).toFixed(2);
-
+  const percentageAchieved = parseFloat(
+    Math.min((totalCalories / DAILY_TARGET) * 100, 100).toFixed(2)
+  );
+  
   const handleNavigateToFoodLog = (mealType: string) => {
     router.push(`/food-log?meal=${mealType}`);
   };

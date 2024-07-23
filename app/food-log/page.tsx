@@ -11,23 +11,30 @@ import { useDateStore } from '../store/dateStore';
 import { Food } from '../types/food';
 import { useFoodStore } from '../store/foodStore';
 
+const mealTypes = ['breakfast', 'lunch', 'dinner'] as const;
+type MealType = typeof mealTypes[number];
+
+const isMealType = (value: any): value is MealType => {
+  return mealTypes.includes(value);
+};
+
 const FoodLog: React.FC = () => {
   const { selectedDate } = useDateStore();
   const { foodLogs, addFood, removeFood } = useFoodStore();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [mealType, setMealType] = useState<string>('breakfast');
+  const [mealType, setMealType] = useState<MealType>('breakfast');
   const [foods, setFoods] = useState<Food[]>([]);
 
   useEffect(() => {
-    const meal = searchParams.get('meal');
-    if (meal) {
-      setMealType(meal.toLowerCase());
+    const meal = searchParams.get('meal')?.toLowerCase();
+    if (meal && isMealType(meal)) {
+      setMealType(meal);
     }
   }, [searchParams]);
 
   useEffect(() => {
-    setFoods(foodLogs[selectedDate]?.[mealType] || []);
+    setFoods((foodLogs[selectedDate] && foodLogs[selectedDate][mealType]) || []);
   }, [selectedDate, mealType, foodLogs]);
 
   const handleAddFood = (food: Food) => {
@@ -38,14 +45,12 @@ const FoodLog: React.FC = () => {
     removeFood(selectedDate, mealType, index);
   };
 
-  const mealTypes = ['Breakfast', 'Lunch', 'Dinner'];
-
   const handleDone = () => {
     router.push('/');
   };
 
   const handleBack = () => {
-    console.log('Back button clicked');
+    router.push('/');
   };
 
   return (
@@ -57,10 +62,10 @@ const FoodLog: React.FC = () => {
           {mealTypes.map((type) => (
             <button
               key={type}
-              className={`px-4 py-2 rounded ${mealType === type.toLowerCase() ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              onClick={() => setMealType(type.toLowerCase())}
+              className={`px-4 py-2 rounded ${mealType === type ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              onClick={() => setMealType(type)}
             >
-              {type}
+              {type.charAt(0).toUpperCase() + type.slice(1)}
             </button>
           ))}
         </div>

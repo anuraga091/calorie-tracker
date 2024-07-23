@@ -1,5 +1,6 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
+import { StateCreator } from 'zustand';
 
 interface DateState {
   selectedDate: string;
