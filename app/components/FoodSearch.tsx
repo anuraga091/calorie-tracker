@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { searchFood, getFoodDetails } from '../services/api/foodApi';
+import { searchFood, getFoodDetails } from '../../services/api/foodApi';
 import { Food } from '../types/food'; 
 import { useDebounce } from '../hooks/useDebounce';
 
