@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -18,7 +18,7 @@ const isMealType = (value: any): value is MealType => {
   return mealTypes.includes(value);
 };
 
-const FoodLog: React.FC = () => {
+const FoodLogContent: React.FC = () => {
   const { selectedDate } = useDateStore();
   const { foodLogs, addFood, removeFood } = useFoodStore();
   const router = useRouter();
@@ -87,5 +87,11 @@ const FoodLog: React.FC = () => {
     </div>
   );
 };
+
+const FoodLog: React.FC = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <FoodLogContent />
+  </Suspense>
+);
 
 export default FoodLog;
