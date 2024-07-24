@@ -58,11 +58,11 @@ const FoodLogContent: React.FC = () => {
       <Header />
       <main className="flex-grow p-4 overflow-y-auto">
         <CustomDatePicker initialView="date" />
-        <div className="flex justify-around my-4">
+        <div className="flex justify-between space-x-2 bg-gray-200 py-1 my-4 px-4 rounded-full">
           {mealTypes.map((type) => (
             <button
               key={type}
-              className={`px-4 py-2 rounded ${mealType === type ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              className={`px-4 py-2 rounded-full focus:outline-none ${mealType === type ? 'bg-white shadow' : 'bg-gray-200'}`}
               onClick={() => setMealType(type)}
             >
               {type.charAt(0).toUpperCase() + type.slice(1)}

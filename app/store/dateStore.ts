@@ -3,10 +3,11 @@ import { persist, PersistOptions } from 'zustand/middleware';
 import { StateCreator } from 'zustand';
 
 interface DateState {
-  selectedDate: string;
-  setSelectedDate: (date: string) => void;
+  selectedDate: string; // Stores date as a string in ISO format
+  setSelectedDate: (date: string) => void; // Function to update the selected date
 }
 
+// Custom type for enhanced readability and reusability of the persist function with specific typing
 type MyPersist = (
   config: StateCreator<DateState>,
   options: PersistOptions<DateState>
@@ -19,7 +20,8 @@ const useDateStore = create<DateState>(
       setSelectedDate: (date: string) => set({ selectedDate: date }),
     }),
     {
-      name: 'date-storage',
+      name: 'date-storage', // Name of the local storage item
+      //getStorage: () => localStorage, // Optionally specify storage type, default is localStorage
     }
   )
 );

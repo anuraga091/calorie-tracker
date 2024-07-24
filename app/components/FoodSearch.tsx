@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { searchFood, getFoodDetails } from '../../services/api/foodApi';
 import { Food } from '../types/food'; 
 import { useDebounce } from '../hooks/useDebounce';
+import Image from 'next/image';
 
 interface FoodSearchProps {
   onAdd: (food: Food) => void;
@@ -76,37 +77,28 @@ const FoodSearch: React.FC<FoodSearchProps> = ({ onAdd, onBack }) => {
 
   return (
     <div className="mb-4">
-      <div className="flex items-center mb-4 bg-gray-100 p-2 rounded">
-        <button onClick={onBack} className="mr-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+      <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 mb-4">
+        <Image src='/search.png' alt='search' height={24} width={24}/>
         <input
           type="text"
           {...register('query')}
-          placeholder="Search for food"
-          className="border p-2 flex-grow rounded"
+          placeholder="Search..."
+          className="bg-gray-100 ml-2 outline-none flex-grow"
           onFocus={() => setShowResults(true)}
         />
-        <button onClick={handleClear} className="ml-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
       </div>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {showResults && (
-        <ul>
+        <ul className='mb-4 bg-white p-4 rounded-lg shadow'>
           {results.map((item) => (
             <li
               key={item.id}
-              className="flex justify-between items-center bg-gray-100 p-2 mb-2 rounded cursor-pointer"
+              className=" mb-1 p-1 hover:bg-gray-100  cursor-pointer"
               onClick={() => handleSelectFood(item)}
             >
               <div>
-                <h4>{item.title}</h4>
+                <p>{item.title}</p>
               </div>
             </li>
           ))}

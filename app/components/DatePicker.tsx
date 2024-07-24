@@ -1,40 +1,29 @@
 import { useState, useEffect } from 'react';
-import { format, addDays, startOfWeek } from 'date-fns';
+import { format, addDays, startOfWeek, getDate, parseISO, formatISO } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDateStore } from '../store/dateStore';
-import Image from 'next/image'
+import Image from 'next/image';
 
 interface DatePickerProps {
   initialView?: 'date' | 'expanded';
 }
 
-const getMonthName = (date: Date): string => {
-  return date.toLocaleString('default', { month: 'long' });
-};
-
-
-const CustomDatePicker: React.FC<DatePickerProps> = ({ initialView = 'date'}) => {
+const CustomDatePicker: React.FC<DatePickerProps> = ({ initialView = 'date' }) => {
   const { selectedDate, setSelectedDate } = useDateStore();
   const [view, setView] = useState<'date' | 'expanded'>(initialView);
-  const [selectedDateState, setSelectedDateState] = useState<Date>(new Date(selectedDate));
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate));
+  const [selectedDateState, setSelectedDateState] = useState<Date>(parseISO(selectedDate));
 
   useEffect(() => {
-    const newDate = new Date(selectedDate);
+    const newDate = parseISO(selectedDate);
     setSelectedDateState(newDate);
-    setCurrentMonth(new Date(newDate.getFullYear(), newDate.getMonth()));
   }, [selectedDate]);
 
-  const startDate = startOfWeek(selectedDateState);
-
   const handleDateClick = (date: Date | null) => {
-    if (date){
-        setSelectedDateState(date);
-        setCurrentMonth(new Date(date.getFullYear(), date.getMonth()));
-        setSelectedDate(date.toISOString().split('T')[0]);
+    if (date) {
+      setSelectedDateState(date);
+      setSelectedDate(formatISO(date, { representation: 'date' }));
     }
-    
   };
 
   const toggleView = () => {
@@ -46,34 +35,34 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({ initialView = 'date'}) =>
       <div className="flex justify-between items-center mb-2">
         <div className="relative">
           <button onClick={toggleView} className="relative z-10 flex items-center">
-            {format(currentMonth, 'MMMM')}
+            {format(selectedDateState, 'MMMM')}
             <span className={`ml-2 transform ${view === 'expanded' ? 'rotate-180' : ''}`}>
               &#9662;
             </span>
           </button>
         </div>
-        <div className='react-datepicker'>
+        <div className="react-datepicker">
           <DatePicker
             selected={selectedDateState}
-            onChange={(date: Date | null) => handleDateClick(date)}
+            onChange={handleDateClick}
             customInput={
               <button>
-                <Image src="/calender.png" alt="calender" width={24} height={24}/>
+                <Image src="/calender.png" alt="calendar" width={24} height={24} />
               </button>
             }
-            
           />
         </div>
       </div>
       {view === 'expanded' && (
-        <div className="calendar-grid">
+        <div className="calendar-grid grid grid-cols-7 gap-2 mt-6">
           {Array.from({ length: 7 }).map((_, i) => {
-            const day = addDays(startDate, i);
+            const day = addDays(startOfWeek(selectedDateState), i);
+            const isSelected = getDate(day) === getDate(selectedDateState);
             return (
               <button
                 key={i}
                 onClick={() => handleDateClick(day)}
-                className={`calendar-day ${day.getDate() === selectedDateState.getDate() ? 'bg-blue-500 text-white' : ''}`}
+                className={`calendar-day ${isSelected ? ' text-blue-500' : ''} p-2 rounded`}
               >
                 {format(day, 'eee d')}
               </button>
